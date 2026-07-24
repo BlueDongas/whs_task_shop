@@ -67,15 +67,6 @@ python run.py
 
 브라우저에서 `http://127.0.0.1:5000`에 접속합니다.
 
-## Docker 실행
-
-```bash
-cp .env.example .env
-# .env의 SECRET_KEY를 반드시 변경
-docker compose up --build
-```
-
-Docker에서는 SQLite 파일이 `tiny_market_data` 볼륨에 보존됩니다.
 
 ## 테스트
 
@@ -124,18 +115,4 @@ tiny-market-flask/
 | 중복 요청 | DB 유일 제약과 서버 측 중복 확인 |
 | 거래 무결성 | 판매자만 승인 가능, 승인 시 나머지 요청 자동 거절 |
 
-## GitHub 업로드
 
-```bash
-git init
-git add .
-git commit -m "Initial secure Flask marketplace"
-git branch -M main
-git remote add origin <YOUR_GITHUB_REPOSITORY_URL>
-git push -u origin main
-```
-
-## 보고서
-
-`docs/report.md`에 개발 전 과정 보고서 초안이 포함되어 있습니다.  
-완성 후 Markdown 미리보기 또는 문서 편집기를 이용해 PDF로 변환하면 됩니다.
