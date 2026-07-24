@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ product.title }} - Tiny Market{% endblock %}
+{% block content %}
+<article class="detail-card">
+    <div class="detail-header">
+        <div>
+            <span class="badge {% if product.status == 'SOLD' %}sold{% endif %}">
+                {{ "판매 완료" if product.status == "SOLD" else "판매 중" }}
+            </span>
+            <h1>{{ product.title }}</h1>
+            <p class="meta">판매자: {{ product.seller.username }}</p>
+        </div>
+        <p class="price large">{{ "{:,}".format(product.price) }}원</p>
+    </div>
+
+    <div class="product-body">{{ product.description }}</div>
+
+    <div class="actions">
+        {% if current_user.is_authenticated and current_user.id == product.seller_id %}
+            {% if product.status != "SOLD" %}
+                <a class="button" href="{{ url_for('products.edit', product_id=product.id) }}">수정</a>
+            {% endif %}
+            <form method="post" action="{{ url_for('products.delete', product_id=product.id) }}"
+                  onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                {{ empty_form.hidden_tag() }}
+                <button class="button danger" type="submit">삭제</button>
+            </form>
+        {% elif current_user.is_authenticated %}
+            {% if product.status == "SELLING" and not existing_request %}
+                <form method="post" action="{{ url_for('transactions.request_purchase', product_id=product.id) }}">
+                    {{ empty_form.hidden_tag() }}
+                    <button class="button" type="submit">구매 요청</button>
+                </form>
+            {% elif existing_request %}
+                <p>요청 상태: <strong>{{ existing_request.status }}</strong></p>
+            {% else %}
+                <p>판매가 종료된 상품입니다.</p>
+            {% endif %}
+        {% else %}
+            <a class="button" href="{{ url_for('auth.login', next=request.path) }}">로그인 후 구매 요청</a>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

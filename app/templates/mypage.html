@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}마이페이지 - Tiny Market{% endblock %}
+{% block content %}
+<h1>마이페이지</h1>
+
+<section>
+    <h2>내 판매 상품</h2>
+    <div class="list">
+        {% for product in selling_products %}
+            <a class="list-row" href="{{ url_for('products.detail', product_id=product.id) }}">
+                <span>{{ product.title }}</span>
+                <span>{{ "{:,}".format(product.price) }}원 · {{ product.status }}</span>
+            </a>
+        {% else %}
+            <p>판매 상품이 없습니다.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h2>받은 구매 요청</h2>
+    <div class="list">
+        {% for req in incoming_requests %}
+            <div class="list-row">
+                <div>
+                    <strong>{{ req.product.title }}</strong>
+                    <span>구매자 {{ req.buyer.username }} · {{ req.status }}</span>
+                </div>
+                {% if req.status == "PENDING" and req.product.status == "SELLING" %}
+                <div class="actions">
+                    <form method="post" action="{{ url_for('transactions.accept_request', request_id=req.id) }}">
+                        {{ empty_form.hidden_tag() }}
+                        <button class="button small" type="submit">승인</button>
+                    </form>
+                    <form method="post" action="{{ url_for('transactions.reject_request', request_id=req.id) }}">
+                        {{ empty_form.hidden_tag() }}
+                        <button class="button danger small" type="submit">거절</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>받은 구매 요청이 없습니다.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h2>보낸 구매 요청</h2>
+    <div class="list">
+        {% for req in buying_requests %}
+            <a class="list-row" href="{{ url_for('products.detail', product_id=req.product.id) }}">
+                <span>{{ req.product.title }}</span>
+                <span>{{ req.status }}</span>
+            </a>
+        {% else %}
+            <p>보낸 구매 요청이 없습니다.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

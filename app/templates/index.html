@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}상품 목록 - Tiny Market{% endblock %}
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>작지만 안전한 중고거래</h1>
+        <p>판매할 물건을 등록하고 구매 요청을 보내보세요.</p>
+    </div>
+    {% if current_user.is_authenticated %}
+        <a class="button" href="{{ url_for('products.create') }}">상품 등록</a>
+    {% endif %}
+</section>
+
+<form class="search" method="get">
+    <input type="search" name="q" value="{{ query }}" maxlength="100" placeholder="상품명 또는 설명 검색">
+    <button type="submit">검색</button>
+</form>
+
+<div class="grid">
+    {% for product in products %}
+        <article class="card">
+            <span class="badge {% if product.status == 'SOLD' %}sold{% endif %}">
+                {{ "판매 완료" if product.status == "SOLD" else "판매 중" }}
+            </span>
+            <h2><a href="{{ url_for('products.detail', product_id=product.id) }}">{{ product.title }}</a></h2>
+            <p class="description">{{ product.description }}</p>
+            <p class="price">{{ "{:,}".format(product.price) }}원</p>
+            <p class="meta">판매자: {{ product.seller.username }}</p>
+        </article>
+    {% else %}
+        <p>등록된 상품이 없습니다.</p>
+    {% endfor %}
+</div>
+
+{% if pagination.pages > 1 %}
+<nav class="pagination" aria-label="페이지 이동">
+    {% if pagination.has_prev %}
+        <a href="{{ url_for('products.index', page=pagination.prev_num, q=query) }}">이전</a>
+    {% endif %}
+    <span>{{ pagination.page }} / {{ pagination.pages }}</span>
+    {% if pagination.has_next %}
+        <a href="{{ url_for('products.index', page=pagination.next_num, q=query) }}">다음</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

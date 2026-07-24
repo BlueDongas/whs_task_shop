@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}회원가입 - Tiny Market{% endblock %}
+{% block content %}
+<div class="form-card">
+    <h1>회원가입</h1>
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <label>{{ form.username.label }}{{ form.username(autocomplete="username") }}</label>
+        {% for error in form.username.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+        <label>{{ form.password.label }}{{ form.password(autocomplete="new-password") }}</label>
+        {% for error in form.password.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+        <label>{{ form.password_confirm.label }}{{ form.password_confirm(autocomplete="new-password") }}</label>
+        {% for error in form.password_confirm.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+        {{ form.submit(class_="button") }}
+    </form>
+</div>
+{% endblock %}

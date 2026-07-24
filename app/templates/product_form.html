@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }} - Tiny Market{% endblock %}
+{% block content %}
+<div class="form-card wide">
+    <h1>{{ heading }}</h1>
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <label>{{ form.title.label }}{{ form.title() }}</label>
+        {% for error in form.title.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+        <label>{{ form.description.label }}{{ form.description(rows=8) }}</label>
+        {% for error in form.description.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+        <label>{{ form.price.label }}{{ form.price(min=0) }}</label>
+        {% for error in form.price.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+        {{ form.submit(class_="button") }}
+    </form>
+</div>
+{% endblock %}

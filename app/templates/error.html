@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}오류 {{ code }} - Tiny Market{% endblock %}
+{% block content %}
+<div class="error-page">
+    <h1>{{ code }}</h1>
+    <p>{{ message }}</p>
+    <a class="button" href="{{ url_for('products.index') }}">홈으로</a>
+</div>
+{% endblock %}
